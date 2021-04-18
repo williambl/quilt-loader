@@ -583,8 +583,12 @@ public class ModResolver {
 
 			if (Files.isDirectory(path)) {
 				// Directory
-				modJson = path.resolve("fabric.mod.json");
+				modJson = path.resolve("quilt.mod.json");
 				rootDir = path;
+
+				if (!Files.exists(modJson)) {
+					modJson = path.resolve("fabric.mod.json");
+				}
 
 				if (loader.isDevelopmentEnvironment() && !Files.exists(modJson)) {
 					loader.getLogger().warn("Adding directory " + path + " to mod classpath in development environment - workaround for Gradle splitting mods into two directories");
@@ -596,8 +600,12 @@ public class ModResolver {
 				// JAR file
 				try {
 					jarFs = FileSystemUtil.getJarFileSystem(path, false);
-					modJson = jarFs.get().getPath("fabric.mod.json");
+					modJson = jarFs.get().getPath("quilt.mod.json");
 					rootDir = jarFs.get().getRootDirectories().iterator().next();
+
+					if (!Files.exists(modJson)) {
+						modJson = jarFs.get().getPath("fabric.mod.json");
+					}
 				} catch (IOException e) {
 					throw new RuntimeException("Failed to open mod JAR at " + path + "!");
 				} catch (ZipError e) {

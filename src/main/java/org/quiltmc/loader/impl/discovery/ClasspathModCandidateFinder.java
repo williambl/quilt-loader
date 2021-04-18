@@ -44,11 +44,21 @@ public class ClasspathModCandidateFinder implements ModCandidateFinder {
 		}
 
 		if (QuiltLauncherBase.getLauncher().isDevelopment()) {
-			// Search for URLs which point to 'fabric.mod.json' entries, to be considered as mods.
+			// Search for URLs which point to 'quilt.mod.json' or 'fabric.mod.json' entries, to be considered as mods.
 			try {
-				Enumeration<URL> mods = QuiltLauncherBase.getLauncher().getTargetClassLoader().getResources("fabric.mod.json");
 				Set<URL> modsList = new HashSet<>();
+
+				Enumeration<URL> mods = QuiltLauncherBase.getLauncher().getTargetClassLoader().getResources("quilt.mod.json");
 				while (mods.hasMoreElements()) {
+					try {
+						modsList.add(UrlUtil.getSource("quilt.mod.json", mods.nextElement()));
+					} catch (UrlConversionException e) {
+						loader.getLogger().debug(e);
+					}
+				}
+
+				Enumeration<URL> fabricMods = QuiltLauncherBase.getLauncher().getTargetClassLoader().getResources("fabric.mod.json");
+				while (fabricMods.hasMoreElements()) {
 					try {
 						modsList.add(UrlUtil.getSource("fabric.mod.json", mods.nextElement()));
 					} catch (UrlConversionException e) {
