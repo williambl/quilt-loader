@@ -28,6 +28,7 @@ public final class EntrypointClient {
 			runDir = new File(".");
 		}
 
+		QuiltLoaderImpl.INSTANCE.freeze();
 		QuiltLoaderImpl.INSTANCE.prepareModInit(runDir.toPath(), gameInstance);
 		EntrypointUtils.invoke("main", ModInitializer.class, ModInitializer::onInitialize);
 		EntrypointUtils.invoke("client", ClientModInitializer.class, ClientModInitializer::onInitializeClient);

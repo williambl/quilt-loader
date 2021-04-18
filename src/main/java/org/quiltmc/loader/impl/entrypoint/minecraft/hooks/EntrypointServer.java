@@ -28,6 +28,7 @@ public final class EntrypointServer {
 			runDir = new File(".");
 		}
 
+		QuiltLoaderImpl.INSTANCE.freeze();
 		QuiltLoaderImpl.INSTANCE.prepareModInit(runDir.toPath(), gameInstance);
 		EntrypointUtils.invoke("main", ModInitializer.class, ModInitializer::onInitialize);
 		EntrypointUtils.invoke("server", DedicatedServerModInitializer.class, DedicatedServerModInitializer::onInitializeServer);
